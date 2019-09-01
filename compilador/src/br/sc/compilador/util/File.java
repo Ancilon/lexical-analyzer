@@ -28,7 +28,6 @@ public class File {
     public static final String DEFAULT = PROJECT + "default" + OS;
 
     private JFileChooser fileChooser;
-    private String path;
 
     public File() {
         this.fileChooser = new JFileChooser();
@@ -87,13 +86,9 @@ public class File {
     }
 
     public String getPath() {
-        return path;
+        return fileChooser.getSelectedFile().getPath();
     }
 
-    public File withPath(String path) {
-        this.path = path;
-        return this;
-    }
 
     public JFileChooser getFileChooser() {
         return fileChooser;
@@ -123,9 +118,8 @@ public class File {
      * open, caso contrário retorna um valor null.
      */
     public String pathOpenFile() {
-        if (getOptionDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
-            path = fileChooser.getSelectedFile().getPath();
-            return path;
+        if (getOptionDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {          
+            return fileChooser.getSelectedFile().getPath();
         }
         return null;
     }
@@ -143,12 +137,10 @@ public class File {
         if (getSaveDialog(fileChooser) == JFileChooser.APPROVE_OPTION) {
             if (existFile(fileChooser.getSelectedFile().getPath())) {
                 if (getOptionSubscibe() == YES) {
-                    path = adjustSaveFile(fileChooser);
-                    return path;
+                    return adjustNameFile();
                 }
             } else {
-                path = adjustSaveFile(fileChooser);
-                return path;
+                return adjustNameFile();
             }
         }
         return null;
@@ -197,7 +189,7 @@ public class File {
      * @param fileChooser componente de busca de pasta e arquivos.
      * @return o caminho para salvar o arquivo em formato de string.
      */
-    private String adjustSaveFile(JFileChooser fileChooser) {
+    private String adjustNameFile() {
         String path = fileChooser.getSelectedFile().getPath();
         String format = fileChooser.getFileFilter().getDescription();
         return path.contains(format) ? path : path + format;
@@ -211,6 +203,12 @@ public class File {
         } else {
             JOptionPane.showMessageDialog(fileChooser, "Arquivo não foi salvo!");
         }
+    }
+    
+    public String getFileName(){
+        String path = fileChooser.getSelectedFile().getName();
+        String format = fileChooser.getFileFilter().getDescription();
+        return path.contains(format) ? path : path + format;
     }
 
 }
