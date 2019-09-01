@@ -20,7 +20,7 @@ public class CompiladorControl {
     public static final int CANCEL = 2;
 
     private final Compilador compilador;
-    private String codigoInicial;
+    private String codigoInicial, textEdit;
     private File arquivo;
 
     public CompiladorControl(Compilador compilador) {
@@ -109,6 +109,30 @@ public class CompiladorControl {
     public void cleanTextArea() {
         compilador.getTextCompilacao().setText("");
         compilador.getTextEdicao().setText("");
+    }
+
+    public void copyText() {
+        textEdit = compilador.getTextEdicao().getSelectedText() == null ?
+                "" : compilador.getTextEdicao().getSelectedText();
+    }
+
+    public void pastText() {
+        int position = compilador.getTextEdicao().getCaretPosition();
+        int size = compilador.getTextEdicao().getText().length();
+        String begin = compilador.getTextEdicao().getText().substring(0, position);
+        String end = compilador.getTextEdicao().getText().substring(position, size);
+        compilador.getTextEdicao().setText(begin + textEdit + end);
+    }
+
+    public void cutText() {
+        copyText();
+        int position = compilador.getTextEdicao().getCaretPosition();
+        int size = compilador.getTextEdicao().getText().length();
+        System.out.println(position);
+        String begin = compilador.getTextEdicao().getText()
+                .substring(0, position - textEdit.length());
+        String end = compilador.getTextEdicao().getText().substring(position, size);
+        compilador.getTextEdicao().setText(begin + end);
     }
 
 }
