@@ -50,10 +50,7 @@ public class CompiladorControl {
     }
 
     public void setNameFileWindow() {
-        String[] split = arquivo.getPath().split(File.OS);
-        compilador.setTitle("Compilador - " + Arrays.asList(split).stream()
-                .filter(word -> word.contains(".aae"))
-                .findFirst().get());
+        compilador.setTitle("Compilador - " + arquivo.getFileName());
     }
 
     public void newFile() {
