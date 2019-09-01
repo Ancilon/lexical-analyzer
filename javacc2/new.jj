@@ -1,0 +1,75 @@
+options{
+STATIC = false;
+DEBUG_LOOKAHEAD = false;
+}
+PARSER_BEGIN(Scanner_1)
+package compilador;
+import java.io.*;
+import java.util.*;
+import javax.swing.JOptionPane;
+
+public class Scanner_1{
+
+boolean Menosshort = false; //Saida resumida falso
+public void processa() throws Exception{
+Token t = new Token ();
+
+do {
+
+t = getNextToken(); //Obtém o próximo token
+String nomeToken = tokenImage[t.kind]; //guarda o nome do token na string
+
+} while(t.kind!=0); //condicao de parada: final do arquivo (constante eof 0 )
+}
+
+public static void main(String args[], String x) throws ParseException, FileNotFoundException {
+
+try {
+
+}catch (Error e){
+System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostrando linha e coluna
+}
+
+}
+}
+PARSER_END(Scanner_1)
+
+SKIP : // TOKENS IGNORADOS
+{
+ " "
+| "\r" 
+| "\t" 
+| "\n"
+| <COMENTARIO: "//" (<COM>)*>
+| <COMENTARIOS: "/*" ("\n" | "\r" | <COM>)* "*/" >
+| <#COM: ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))*>
+
+}
+TOKEN : //PALAVRAS RESERVADAS
+{
+ 
+<NOVA: "nova">{
+                                     System.out.println("Palavra Reservada: "+image);
+                                     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

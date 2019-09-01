@@ -1,0 +1,152 @@
+options{
+static = false;
+}
+PARSER_BEGIN(Scanner_1)
+
+import java.io.*;
+import java.util.*;
+import javax.swing.JOptionPane;
+
+public class Scanner_1
+{
+
+
+public void processa() throws Exception{
+Token t = new Token ();
+
+do {
+
+t = getNextToken(); //Obtém o próximo token
+String nomeToken = tokenImage[t.kind]; //guarda o nome do token na string
+System.out.println(nomeToken + "___" + t); //imprime o token 
+} while(t.kind!=0); //condicao de parada: final do arquivo (constante eof 0 )
+}
+
+public static void main(String args[], String x) throws ParseException, FileNotFoundException {
+//Tratar leitura do arquivo... 
+String nomeArq = new String(x);
+Scanner_1 lex = new Scanner_1(new FileInputStream(nomeArq));
+try {
+//lex.processa(); //processamento dos lexemas
+lex.INIT();
+JOptionPane.showMessageDialog(null, "Analise Sintaxica OK");
+}
+catch (Exception e) 
+{
+JOptionPane.showMessageDialog(null, "Analise Sintaxica NOT OK");
+System.out.println("Erro de Token.");
+System.out.println(e.getMessage());
+e.printStackTrace(); 
+}
+catch (Error e)
+{
+System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostrando linha e coluna
+}
+
+}
+
+}
+PARSER_END(Scanner_1)
+
+/* ESPECIFICAÇÃO DO ANALISADOR LÉXICO */
+
+SKIP : // TOKENS IGNORADOS
+{
+ " "
+| "\r" 
+| "\t" 
+| "\n"
+| <COMENTARIO: "//" (<COM>)*>
+| <COMENTARIOS: "/*" ("\n" | "\r" | <COM>)* "*/" >
+| <#COM: ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))*>
+
+}
+
+
+
+/*PADRÕES DE EXPRESSÕES REGULARES
+TOKEN : //Constante
+{
+< CONSTANTE : (< DIGITO >)+ >
+| < #DIGITO : [ "0"-"9" ] >	
+| < ID: (< LETRA > (< LETRA> | < DIGITO >)*)>
+| < #LETRA: ["A"-"Z"] >
+}*/
+
+TOKEN : // PALAVRAS RESERVADAS
+{
+<CLA_TIPOS: "private" | "public" | "protected">{System.out.println("Protecao de tipo -> "+image);}
+| <TIPOS_PRIMITIVOS: "int" | "char" | "float" | "double" | <LONG> (" ")+ "int" | <LONG> "double">{System.out.println("Tipo primitivos -> "+image);}
+| <TIPOS_CONPOSTOS: "struct">{System.out.println("Tipo de composto -> "+image);}
+| <TYPEDEF: "pypedef" >{System.out.println("Renomea topo de composto -> "+image);}
+| <IF: "if" >{System.out.println("PALAVRA RESERVADA -> "+image);}
+| <ELSE: "else" >{System.out.println("PALAVRA RESERVADA -> "+image);}
+| <FOR: "for" >{System.out.println("PALAVRA RESERVADA -> "+image);}
+| <DO: "do" >{System.out.println("PALAVRA RESERVADA -> "+image);}
+| <WHILE: "while" >{System.out.println("PALAVRA RESERVADA -> "+image);}
+| <SWITCH: "switch" >{System.out.println("PALAVRA RESERVADA -> "+image);}
+| <CASE: "case" >{System.out.println("PALAVRA RESERVADA -> "+image);}
+| <RETURN: "return" >{System.out.println("PALAVRA RESERVADA -> "+image);}
+| <BREAK_CONTINUE: "break" | "continue" >{System.out.println("PALAVRA RESERVADA -> "+image);}
+| <PALAVRAS_RESERVADAS: "auto" | "const"
+| "default" | "enum" | "extern" | "goto" | "register" 
+| "short" | "signed"
+| "sizeof" | "static" | "union" | "unsigned"  
+| "volatile" | "string" | "include">{System.out.println("Palavras reservadas -> "+image);}
+| <VOID: "void">
+| <SIMBOLO_RESERVADO: "#">{System.out.println("Inicio das macros -> "+image);}
+| <#LONG: "long">
+}
+
+TOKEN :
+{
+<DELIMITADOR_PV: <PV>>{System.out.println("Ponto e virgula -> "+image);}
+| <DELIMITADOR_V: <v>>{System.out.println("Virgula -> "+image);}
+| <DELIMITADOR_ACO: <A_CO>>{System.out.println("Abre cochete -> "+image);}
+| <DELIMITADOR_FCO: <F_CO>>{System.out.println("Feicha cochete -> "+image);}
+| <DELIMITADOR_ACHA: <A_CHA>>{System.out.println("Abre chave -> "+image);}
+| <DELIMITADOR_FCHA: <F_CHA>>{System.out.println("Feicha chave -> "+image);}
+| <DELIMITADOR_APA: <A_PA>>{System.out.println("Abre parenteses -> "+image);}
+| <DELIMITADOR_FPA: <F_PA>>{System.out.println("Feicha parenteses -> "+image);}
+| <#PV: ";">
+| <#v: ",">
+| <#A_CO: "[">
+| <#F_CO: "]">
+| <#A_CHA: "{">
+| <#F_CHA: "}">
+| <#A_PA: "(">
+| <#F_PA: ")">
+| <OPERADOR_ARITMETICO_MULT: <MULT>>{System.out.println("Operador aritimetico -> "+image);}
+| <OPERADOR_ARITMETICO: <MAIS> | <MENUS> | <DIV> | "%">{System.out.println("Operador aritimetico -> "+image);}
+| <OPERADOR_RELACIONAL: "<" | ">" | "<=" | ">=" | "!=" | "==">{System.out.println("Operador relacional -> "+image);}
+| <OPERADOR_ATRIBUICAO: "+=" | "-=" >{System.out.println("Operador atribuição -> "+image);}
+| <OPERADOR_INCREMENTO: "++" | "--" >{System.out.println("Operador auto incremento -> "+image);}
+| <OPERADOR_ATRIBUICAO_IGU: <IGU> >{System.out.println("Operador igual -> "+image);}
+| <#IGU: "=">
+| <OPERADOR_NEGACAO: "!" >{System.out.println("Operador negacao -> "+image);}
+| <OPERADOR_LOGICO: "||" | "&&" >{System.out.println("Operador logico -> "+image);}
+| <OPERADOR_APONTADOR: "<<" | ">>" | "&" | ".">{System.out.println("Operador apontador -> "+image);}
+| <#DIV: "/">
+| <#MAIS: "+">
+| <#MENUS: "-">
+| <#MULT: "*">
+}
+
+TOKEN : {
+ <INT_CONSTANTE: (<DIGITO>)+ >{System.out.println("Constante inteiro -> "+image);}
+| <REAL_CONSTANTE: (<DIGITO>)+ "." (<DIGITO>)+>{System.out.println("Constante real -> "+image);}
+| <LOGICO_CONSTANTE: "true" | "false">{System.out.println("Constante logico -> "+image);}
+| <STRING_CONSTANTE: "\"" ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))* "\"">{System.out.println("Frase -> "+image);}
+| <#DIGITO: ["0"-"9"]>
+}
+//TOKEN IDENTIFICADOR
+TOKEN : {
+ <IDENTIFICADOR: <LETRA>(<LETRA>|<DIGITO> | "_")*(["$"])?>{System.out.println("Identificador -> "+image);
+ Painel2.add("\nIdentificador -> "+image);
+ analizarlexico.Lista(Painel2);}
+| <BIBLIOTECA: "<" (<LETRA>)+ "." (<LETRA>)+ ">">{System.out.println("Biblioteca -> "+image);}
+| <#LETRA: (["a"-"z","A"-"Z"])>
+}
+
+
+

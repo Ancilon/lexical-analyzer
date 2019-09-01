@@ -1,96 +1,78 @@
+options{
+STATIC = false;
+DEBUG_LOOKAHEAD = false;
+}
+
 PARSER_BEGIN(Lexico)
 import java.io.*;
 class Lexico
 {
+    Lexico lexico;
+    boolean Menosshort = false;
+    public void run() throws Exception{
+        Token t = new Token ();
+        do {
+            t = getNextToken();
+            String nomeToken = tokenImage[t.kind];
+        } while(t.kind!=0);
+    }
+
 	public static void main( String[] args )throws ParseException, Exception
 	{
-		try
-        		{
-             		Lexico analizador = new Lexico( System.in ) ;
-        			analizador.start();
-        		}
-        		catch(ParseException e)
-        		{
-        			System.out.println(e.getMessage());
-        			System.out.println("\tError.");
-        		}
+        boolean debug = false;
+        int i;
+        boolean ms = false;
+        Lexico lex = new Lexico(System.in);
+
+        try {
+            lex.run();
+        }
+        catch (Exception e) {
+            System.out.println("Erro de Token.");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        catch (Error e) {
+            System.out.println(e.getMessage());
+        }
 	}
 }
 PARSER_END(Lexico)
 
 TOKEN:
 {
-      <LPAREN: "(" >{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <RPAREN: ")" >{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <LBRACKET: "[" >{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <RBRACKET: "]" >{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-}
+	  <PALAVRAS_RESERVADAS:"program" | "execute" | "declare" | "constant" | "variable" | "assign" | "show" | "acquire" | "put" | "check"
+	  | "carry" | "out" | "this" | "result" | "as" | "integer" | "real" | "string" | "boolean">
+	  { System.out.println(image + "\t" + matchedToken.beginLine + "\t" +
+	  matchedToken.beginColumn + "\t" + matchedToken.kind + " Palavra Reservada");} |
 
-// RESERVADAS
-TOKEN:
-{
-	  <PROGRAM:"program">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <IDENTIFIER:["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*"!">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <EXECUTE:"execute this">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <DECLARE:"declare this">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <CONSTANT:"as constant">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <VARIABLE:"as variable">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <ASSING:"assign this">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <SHOW:"show this">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <ACQUIRE:"acquire this">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <PUT:"put this">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <CHECK:"check this">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <TRESULT:"true result">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <URESULT:"untrue result">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <CARRY:"carry out this">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <DIGITO:(["0"-"9"])*>{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-}
+	  <CONSTANTES_INTEIRAS:(["0"-"9"])(["0"-"9"])?(["0"-"9"])?(["0"-"9"])?>
+	  { System.out.println(image + "\t" + matchedToken.beginLine + "\t" +
+      matchedToken.beginColumn + "\t" + matchedToken.kind + " Constantes Inteiras");} |
 
-// TIPOS
-TOKEN:
-{
-	  <INTEGER:"integer">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <REAL:"real">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <STRING:"string">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <BOOLEAN:"boolean">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <TRUE:"true">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <UNTRUE:"untrue">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-}
+	  <CONSTANTES_REAIS:(["0"-"9"])(["0"-"9"])?(["0"-"9"])?(["0"-"9"])?(["0"-"9"])?"."(["0"-"9"])(["0"-"9"])?(["0"-"9"])?>
+	  { System.out.println(image + "\t" + matchedToken.beginLine + "\t" +
+      matchedToken.beginColumn + "\t" + matchedToken.kind + " Constantes Reais");} |
 
-// TIPOS
-TOKEN:
-{
-	  <SUM:"+">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <DIV:"/">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <DIVI:"%">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <REST:"%%">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <MINUS:"-">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <MULT:"*">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <EQUAL:"==">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <DIFF:"!=">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <LESSTHAN:"<<">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <GREATERTHAN:">>">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <LESSEQUAL:"<<=">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <GREATEREQUAL:">>=">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <AND:"&">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <OR:"|">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-	| <NOT:"!">{ System.out.println(image + "\t" + matchedToken.beginLine + "\t" + matchedToken.beginColumn + "\t" + matchedToken.kind);}
-}
+      <CONSTANTES_LITERAIS:"true" | "untrue">
+      { System.out.println(image + "\t" + matchedToken.beginLine + "\t" +
+      matchedToken.beginColumn + "\t" + matchedToken.kind + " Constantes Reais");} |
 
+      <SIMBOLOS_ESPECIAIS:"(" | ")" | "[" | "]" | "+" | "/" | "%" | "%%" | "-" | "*" | "==" | "!="
+      | "<<" | ">>" | "<<=" | ">>=" | "&" | "|" | "!">
+      { System.out.println(image + "\t" + matchedToken.beginLine + "\t" +
+      matchedToken.beginColumn + "\t" + matchedToken.kind + " Simbolos Especiais");}
+}
 
 SKIP :
 {
-	" "|"\n" | "\r" | "\r\n" | "\t"
+	" "|"\n" | "\r" | "\r\n"
+	| <COMENTARIO: "//" (<COM>)*>
+    | <COMENTARIOS: "/*" ("\n" | "\r" | <COM>)* "*/" >
+    | <#COM: ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))*>
 }
 
-void start() :
-{ Token t;   }
-{
-	 (<LPAREN> | <RPAREN>  |  <LBRACKET> |  <RBRACKET> |
-	 <PROGRAM> | <IDENTIFIER> | <EXECUTE> | <DECLARE> | <CONSTANT> | <VARIABLE> |
-     <ASSING> | <SHOW> | <ACQUIRE> | <PUT> | <CHECK> | <TRESULT> | <URESULT> | <CARRY> |
-     <INTEGER> | <REAL> | <STRING> | <BOOLEAN> | <TRUE> | <UNTRUE> |
-     <SUM> | <DIV> | <DIVI> | <REST> | <MINUS> | <MULT> | <EQUAL> | <DIFF> |
-     <LESSTHAN> | <GREATERTHAN> | <LESSEQUAL> | <GREATEREQUAL> | <AND> | <OR> | <NOT>)*
-     { System.out.println("TOKEN" + "\t" + "Linha" + "\t" + "Coluna" + "\t" + "Numero");}
+SPECIAL_TOKEN: {
+    <INVALIDO_LEXICO: (~[" ", "\t","\n", "\r", "\f"])+>
+    { System.out.println("Erro: " + image + "\t Linha:" + matchedToken.beginLine + "\t Coluna: "  + matchedToken.beginColumn);}
 }
