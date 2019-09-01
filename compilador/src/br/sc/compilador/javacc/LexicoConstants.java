@@ -25,7 +25,7 @@ public interface LexicoConstants {
   /** RegularExpression Id. */
   int COM = 12;
   /** RegularExpression Id. */
-  int INVALIDO_LEXICO = 13;
+  int INVALID_CONST = 13;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -45,7 +45,7 @@ public interface LexicoConstants {
     "<COMENTARIO>",
     "<COMENTARIOS>",
     "<COM>",
-    "<INVALIDO_LEXICO>",
+    "<INVALID_CONST>",
   };
 
 }

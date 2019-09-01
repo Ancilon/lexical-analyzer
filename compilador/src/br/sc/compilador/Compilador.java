@@ -2,6 +2,8 @@ package br.sc.compilador;
 
 import br.sc.compilador.component.TextLineNumber;
 import br.sc.compilador.control.CompiladorControl;
+import br.sc.compilador.javacc.Token;
+
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -10,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextPane;
 import javax.swing.text.Element;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
@@ -358,6 +362,36 @@ public class Compilador extends javax.swing.JFrame {
         menu_compilacao_compilar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
         menu_compilacao_compilar.setText("Compilar");
         menu_compilacao.add(menu_compilacao_compilar);
+        menu_compilacao_compilar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                InputStream inStream = new InputStream() {
+                    private int position = 0;
+                    private String text = text_edicao.getText();
+
+                    @Override
+                    public int read() throws IOException {
+                        if (position >= text.length()){
+                            return -1;
+                        }
+                        System.out.println(text);
+                        return text.codePointAt(position++);
+                    }
+                };
+
+                SimpleCharStream stream = new SimpleCharStream(inStream);
+                System.out.println(inStream);
+                LexicoTokenManager analyser = new LexicoTokenManager(stream);
+                while (analyser.getNextToken() != null) {
+                    Token matchedToken = analyser.getNextToken();
+
+                    text_compilacao.setText(text_compilacao.getText() + matchedToken + "\t" + matchedToken.beginLine + "\t" +
+                            matchedToken.beginColumn + "\t" + matchedToken.kind + " Simbolos Especiais\n");
+                }
+            }
+        });
+
+
 
         menu_compilacao_executar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F8, 0));
         menu_compilacao_executar.setText("Executar");

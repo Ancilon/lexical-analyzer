@@ -5,6 +5,7 @@ DEBUG_LOOKAHEAD = false;
 
 PARSER_BEGIN(Lexico)
 import java.io.*;
+import java.util.*;
 class Lexico
 {
     Lexico lexico;
@@ -39,12 +40,16 @@ class Lexico
 }
 PARSER_END(Lexico)
 
+TOKEN_MGR_DECLS:
+{
+}
+
 TOKEN:
 {
 	  <PALAVRAS_RESERVADAS:"program" | "execute" | "declare" | "constant" | "variable" | "assign" | "show" | "acquire" | "put" | "check"
 	  | "carry" | "out" | "this" | "result" | "as" | "integer" | "real" | "string" | "boolean">
 	  { System.out.println(image + "\t" + matchedToken.beginLine + "\t" +
-	  matchedToken.beginColumn + "\t" + matchedToken.kind + " Palavra Reservada");} |
+        matchedToken.beginColumn + "\t" + matchedToken.kind + " Palavra Reservada");} |
 
 	  <CONSTANTES_INTEIRAS:(["0"-"9"])(["0"-"9"])?(["0"-"9"])?(["0"-"9"])?>
 	  { System.out.println(image + "\t" + matchedToken.beginLine + "\t" +
@@ -73,6 +78,6 @@ SKIP :
 }
 
 SPECIAL_TOKEN: {
-    <INVALIDO_LEXICO: (~[" ", "\t","\n", "\r", "\f"])+>
-    { System.out.println("Erro: " + image + "\t Linha:" + matchedToken.beginLine + "\t Coluna: "  + matchedToken.beginColumn);}
+    <INVALID_CONST: "\"" (~["\n","\r","\""])*["\n","\r"]>
+    {System.err.println("Linha "+ input_stream.getEndLine()+ " Coluna "+ input_stream.getEndColumn() +" Caractere invalido encontrado \\n: " + image +" Era esperado uma aspa");}
 }
