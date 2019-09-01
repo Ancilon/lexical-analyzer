@@ -1,4 +1,4 @@
-package util;
+package br.sc.compilador.util;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

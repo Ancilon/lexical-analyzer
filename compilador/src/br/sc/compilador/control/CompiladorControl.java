@@ -1,6 +1,8 @@
-package lexical_analyzer.control;
+package br.sc.compilador.control;
 
-import lexical_analyzer.Compilador;
+import br.sc.compilador.Compilador;
+
+
 
 /**
  * Classe para controle da tela do Compilador, executando todos os tipos de
