@@ -1,4 +1,4 @@
-package util;
+package br.sc.compilador.util;
 
 /**
  * Gerencia as estrutras de listas ou collections.

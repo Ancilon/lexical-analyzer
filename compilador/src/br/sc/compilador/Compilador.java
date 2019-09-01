@@ -1,7 +1,9 @@
-package lexical_analyzer;
+package br.sc.compilador;
 
-import lexical_analyzer.component.TextLineNumber;
-import lexical_analyzer.control.CompiladorControl;
+import br.sc.compilador.component.TextLineNumber;
+import br.sc.compilador.control.CompiladorControl;
+
+
 
 /**
  *

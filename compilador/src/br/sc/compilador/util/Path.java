@@ -1,6 +1,6 @@
-package util;
+package br.sc.compilador.util;
 
-import br.sc.uniaodk.util.control.PathControl;
+import br.sc.compilador.util.control.PathControl;
 import java.util.Arrays;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;

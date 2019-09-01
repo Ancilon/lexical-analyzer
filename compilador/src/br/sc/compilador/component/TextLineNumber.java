@@ -1,4 +1,4 @@
-package lexical_analyzer.component;
+package br.sc.compilador.component;
 
 import java.awt.Color;
 import java.awt.Dimension;
