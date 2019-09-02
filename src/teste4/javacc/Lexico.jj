@@ -1,0 +1,103 @@
+PARSER_BEGIN(Lexico)
+import java.io.*;
+class Lexico
+{
+	public static void main( String[] args )throws ParseException, Exception
+	{
+		try
+        		{
+             		Lexico analizador = new Lexico( System.in ) ;
+        			analizador.start();
+        			System.out.println("\tOk.");
+        		}
+        		catch(ParseException e)
+        		{
+        			System.out.println(e.getMessage());
+        			System.out.println("\tError.");
+        		}
+	}
+}
+PARSER_END(Lexico)
+
+TOKEN:
+{
+      <LPAREN: "(" > 
+	| <RPAREN: ")" >
+	| <LBRACKET: "[" > 
+	| <RBRACKET: "]" > 
+}
+
+// RESERVADAS
+TOKEN:
+{
+	  <PROGRAM:"program"> 
+	| <IDENTIFIER:["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*"!">
+	| <EXECUTE:"execute this">
+	| <DECLARE:"declare this">
+	| <CONSTANT:"as constant">
+	| <VARIABLE:"as variable">
+	| <ASSING:"assign this">
+	| <SHOW:"show this">
+	| <ACQUIRE:"acquire this">
+	| <PUT:"put this">
+	| <CHECK:"check this">
+	| <TRESULT:"true result">
+	| <URESULT:"untrue result">
+	| <CARRY:"carry out this">
+}
+
+// TIPOS
+TOKEN:
+{
+	  <INTEGER:"integer"> 
+	| <REAL:"real"> 
+	| <STRING:"string">
+	| <BOOLEAN:"boolean">
+	| <TRUE:"true">
+	| <UNTRUE:"untrue">
+}
+
+// TIPOS
+TOKEN:
+{
+	  <SUM:"+"> 
+	| <DIV:"/"> 
+	| <DIVI:"%">
+	| <REST:"%%">
+	| <MINUS:"-">
+	| <MULT:"*">
+	| <EQUAL:"==">
+	| <DIFF:"!=">
+	| <LESSTHAN:"<<">
+	| <GREATERTHAN:">>">
+	| <LESSEQUAL:"<<=">
+	| <GREATEREQUAL:">>=">
+	| <AND:"&">
+	| <OR:"|">
+	| <NOT:"!">
+}
+
+
+SKIP :
+{
+	" "|"\n" | "\r" | "\r\n" | "\t"
+}
+
+void start() :
+{ Token t;   }
+{
+	 (t=<LPAREN>
+	 //|<RPAREN>|<LBRACKET>|<RBRACKET>
+
+	 //<PROGRAM> | <IDENTIFIER> | <EXECUTE> | <DECLARE> | <CONSTANT> | <VARIABLE> |
+	 //<ASSING> | <SHOW> | <ACQUIRE> | <PUT> | <CHECK> | <TRESULT> | <URESULT> | <CARRY> |
+
+     //<INTEGER> | <REAL> | <STRING> | <BOOLEAN> | <TRUE> | <UNTRUE> |
+
+     //<SUM> | <DIV> | <DIVI> | <REST> | <MINUS> | <MULT> | <EQUAL> | <DIFF> |
+     //<LESSTHAN> | <GREATERTHAN> | <LESSEQUAL> | <GREATEREQUAL> | <AND> | <OR> | <NOT>
+      { System.out.print("\nToken: "  + t.image);
+        System.out.print("\tLinha: "  + t.beginLine);
+        System.out.print("\tColuna: "  + t.beginColumn);
+       } )*
+}
